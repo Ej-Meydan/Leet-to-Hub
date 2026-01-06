@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "Leet-Hub",
+  "version": "0.1",
+  "description": "Chrome extension test",
+  "content_scripts": [
+    {
+      "matches": ["https://leetcode.com/*"],
+      "js": ["content.js"]
+    }
+  ]
+}
