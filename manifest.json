@@ -2,11 +2,17 @@
   "manifest_version": 3,
   "name": "Leet-Hub",
   "version": "0.1",
-  "description": "Chrome extension test",
   "content_scripts": [
     {
-      "matches": ["https://leetcode.com/problems*"],
-      "js": ["content.js"]
+      "matches": ["https://leetcode.com/problems/*"],
+      "js": ["content.js"],
+      "all_frames": true
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["inject.js"],
+      "matches": ["https://leetcode.com/*"]
     }
   ]
 }
