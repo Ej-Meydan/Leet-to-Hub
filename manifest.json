@@ -5,7 +5,7 @@
   "description": "Chrome extension test",
   "content_scripts": [
     {
-      "matches": ["https://leetcode.com/*"],
+      "matches": ["https://leetcode.com/problems*"],
       "js": ["content.js"]
     }
   ]
