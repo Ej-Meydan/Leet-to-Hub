@@ -1,34 +1,33 @@
-console.log("[inject] inject.js loaded");
+(function() {
+  
+  const targetNode = document.querySelector("#__next"); 
+  if (!targetNode) return;
 
-const originalFetch = window.fetch;
+  const config = { childList: true, subtree: true };
 
-window.fetch = async function (...args) {
-  const url = args[0];
+  const callback = (mutationsList) => {
+    for (const mutation of mutationsList) {
+      for (const node of mutation.addedNodes) {
+        
+        if (node.nodeType === 1) { 
+          const submissionEl = node.querySelector("[data-cy='submission-status']");
+          if (submissionEl) {
 
-  if (typeof url === "string" && url.includes("/submit/")) {
-    console.log("[inject] submit detected");
-
-    const res = await originalFetch.apply(this, args);
-
-    try {
-      const clone = res.clone();
-      const data = await clone.json();
-
-      if (data?.submission_id) {
-        console.log("[inject] submit response:", data);
-
-        window.postMessage(
-          {
-            type: "LEETCODE_SUBMISSION_ID",
-            submissionId: data.submission_id,
-          },
-          "*"
-        );
+            const match = window.location.pathname.match(/submissions\/(\d+)/);
+            if (match) {
+              const submissionId = match[1];
+              window.postMessage({
+                type: "LEETCODE_SUBMISSION_ID",
+                submissionId: submissionId
+              }, "*");
+            }
+          }
+        }
       }
-    } catch (e) {}
+    }
+  };
 
-    return res;
-  }
+  const observer = new MutationObserver(callback);
+  observer.observe(targetNode, config);
 
-  return originalFetch.apply(this, args);
-};
+})();
